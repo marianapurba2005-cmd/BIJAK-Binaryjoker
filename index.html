@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('bj-theme');
+        var theme = saved === 'light' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) { document.documentElement.setAttribute('data-theme', 'dark'); }
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>BIJAK | Binary Joker</title>
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <canvas id="matrixRain" class="bg-rain" aria-hidden="true"></canvas>
+  <div class="bg-felt-vignette" aria-hidden="true"></div>
+  <div class="bg-scanlines" aria-hidden="true"></div>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--cyan" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--purple" aria-hidden="true"></div>
+
+  <div class="container-fluid game-shell py-3 py-md-4">
+
+    <div id="stickyTopbar" class="sticky-topbar mb-3">
+      <header class="game-header">
+        <div class="game-title-wrap mb-2">
+          <h1 class="game-title">
+            <span class="bracket">&lt;</span><span class="brand-word">BIJAK</span><span class="bracket">/&gt;</span>
+          </h1>
+          <p class="game-subtitle">BIJAK is Binary Joker<span class="blink-cursor">_</span></p>
+        </div>
+        <div class="header-actions">
+          <div id="diffSelector" class="difficulty-selector" role="group" aria-label="Pilih tingkat kesulitan">
+            <button type="button" class="btn btn-neon btn-neon--cyan diff-btn is-active" data-diff="easy">MUDAH</button>
+            <button type="button" class="btn btn-neon btn-neon--purple diff-btn" data-diff="normal">NORMAL</button>
+            <button type="button" class="btn btn-neon btn-neon--red diff-btn" data-diff="hard">SULIT</button>
+          </div>
+          <div class="header-buttons">
+            <button id="btnTheme" class="theme-toggle" type="button" title="Ganti tema terang/gelap" aria-label="Ganti tema terang/gelap" aria-pressed="false">
+              <span class="theme-toggle-track">
+                <span class="theme-toggle-bit theme-toggle-bit--0">0</span>
+                <span class="theme-toggle-bit theme-toggle-bit--1">1</span>
+                <span class="theme-toggle-knob"></span>
+              </span>
+            </button>
+            <button id="btnHome" class="btn btn-neon btn-neon--gold">HOME</button>
+            <button id="btnStart" class="btn btn-neon btn-neon--cyan">START</button>
+            <button id="btnRestart" class="btn btn-neon btn-neon--purple" disabled>RESTART</button>
+          </div>
+        </div>
+      </header>
+
+      <section class="info-bar row gx-2 gy-2" aria-label="Status permainan">
+        <div class="col-6 col-md-3">
+          <div class="info-card">
+            <span class="info-label">LEVEL</span>
+            <span id="statLevel" class="info-value">1</span>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="info-card">
+            <span class="info-label">SCORE</span>
+            <span id="statScore" class="info-value">0</span>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="info-card info-card--timer">
+            <span class="info-label">TIME</span>
+            <span id="statTimer" class="info-value">--</span>
+            <div class="timer-track"><div id="timerBar" class="timer-fill"></div></div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="info-card">
+            <span class="info-label">LIVES</span>
+            <span id="statLives" class="info-value lives-value">
+              <span class="life-chip is-on"></span><span class="life-chip is-on"></span><span class="life-chip is-on"></span>
+            </span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- HIGH SCORE BAR -->
+    <div class="highscore-bar mb-3">
+      <span class="highscore-label">BEST</span>
+      <span id="statBest" class="highscore-value">0</span>
+      <span id="newRecordBadge" class="new-record-badge d-none">NEW RECORD</span>
+      <button id="btnResetHighscore" class="btn-reset-hs" type="button" title="Reset High Score" aria-label="Reset High Score">&#8635;</button>
+    </div>
+
+    <section class="target-area text-center mb-4" aria-label="Kartu target casino">
+      <p class="section-caption">KARTU TARGET CASINO</p>
+      <p class="target-sub-caption">Sisi depan menunjukkan nilai DESIMAL. Balik kartu untuk mengintip BINER-nya sekali saja.</p>
+      <div class="hint-card-wrap">
+        <div id="hintCard" class="poker-card">
+          <div class="poker-card-inner">
+            <div class="poker-card-face poker-card-front">
+              <span class="poker-corner poker-corner--tl">DEC<br>&#9830;</span>
+              <span id="hintCardValue" class="poker-card-value">--</span>
+              <span class="poker-corner poker-corner--br">DEC<br>&#9830;</span>
+            </div>
+            <div class="poker-card-face poker-card-back">
+              <div class="poker-back-pattern" aria-hidden="true"></div>
+              <span class="poker-corner poker-corner--tl">BIN<br>&#9824;</span>
+              <span id="hintCardBinary" class="poker-card-binary">----</span>
+              <span class="poker-corner poker-corner--br">BIN<br>&#9824;</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button id="btnHint" class="btn btn-neon btn-neon--purple mt-3" disabled>BALIK KARTU</button>
+      <p id="hintNote" class="hint-note">Kartu hanya bisa dibalik 1x dan tampil sebentar. Ingat baik-baik.</p>
+      <p id="flipCountdown" class="flip-countdown d-none">MENUTUP DALAM <span id="flipCountdownValue">3</span>...</p>
+    </section>
+
+    <section class="slots-area mb-3" aria-label="Area susunan jawaban">
+      <p class="section-caption">YOUR SEQUENCE</p>
+      <div id="slotsContainer" class="slots-container"></div>
+    </section>
+
+    <section class="cards-area mb-3" aria-label="Kartu tersedia">
+      <p class="section-caption">CARD DECK</p>
+      <div id="cardsContainer" class="cards-container"></div>
+    </section>
+
+    <section class="action-bar d-flex justify-content-center gap-3 mb-4">
+      <button id="btnShuffle" class="btn btn-neon btn-neon--cyan" disabled>ACAK KARTU</button>
+    </section>
+
+    <div id="feedbackOverlay" class="feedback-overlay d-none">
+      <div class="feedback-box">
+        <h2 id="feedbackTitle" class="feedback-title"></h2>
+        <p id="feedbackText" class="feedback-text"></p>
+        <button id="feedbackBtn" class="btn btn-neon btn-neon--cyan mt-2">LANJUT</button>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- HOME SCREEN -->
+  <div id="homeScreen" class="home-screen">
+    <div class="home-box">
+      <button id="btnThemeHome" class="theme-toggle theme-toggle--home" type="button" title="Ganti tema terang/gelap" aria-label="Ganti tema terang/gelap" aria-pressed="false">
+        <span class="theme-toggle-track">
+          <span class="theme-toggle-bit theme-toggle-bit--0">0</span>
+          <span class="theme-toggle-bit theme-toggle-bit--1">1</span>
+          <span class="theme-toggle-knob"></span>
+        </span>
+      </button>
+      <h1 class="home-title"><span class="bracket">&lt;</span><span class="brand-word">BIJAK</span><span class="bracket">/&gt;</span></h1>
+      <p class="home-subtitle">BIJAK is Binary Joker<span class="blink-cursor">_</span></p>
+      <p class="home-sub">Susun angka BINER dari ingatanmu setelah mengintip kartu kasino sekilas.</p>
+      <div class="home-diff-label">Pilih Kesulitan</div>
+      <div class="home-diff-selector" id="homeDiffSelector">
+        <button type="button" class="btn btn-neon btn-neon--cyan diff-btn is-active" data-diff="easy">MUDAH<br><span class="diff-sub">1.5 dtk</span></button>
+        <button type="button" class="btn btn-neon btn-neon--purple diff-btn" data-diff="normal">NORMAL<br><span class="diff-sub">0.5 dtk</span></button>
+        <button type="button" class="btn btn-neon btn-neon--red diff-btn" data-diff="hard">SULIT<br><span class="diff-sub">0.3 dtk</span></button>
+      </div>
+      <button id="homeStartBtn" class="btn btn-neon btn-neon--cyan home-start-btn">MULAI BERMAIN</button>
+      <div class="home-highscore">
+        <span class="highscore-label">BEST SCORE</span>
+        <span id="homeStatBest" class="home-best-value">0</span>
+        <button id="homeBtnResetHighscore" class="btn-reset-hs" type="button" title="Reset High Score" aria-label="Reset High Score">&#8635;</button>
+      </div>
+      <div class="home-rules">
+        <p>Kartu desimal muncul &rarr; balik kartu untuk lihat biner sekilas &rarr; susun kartu 0/1 sesuai urutan.</p>
+        <p>Joker: kartu wild yang bisa jadi 0 atau 1. Ingatan tajam = skor tinggi.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="jokerPopup" class="joker-popup d-none">
+    <div class="joker-popup-box">
+      <p class="joker-popup-title">JOKER WILD CARD</p>
+      <p class="joker-popup-sub">Ubah kartu ini menjadi:</p>
+      <div class="d-flex gap-2 justify-content-center mt-2">
+        <button id="jokerChoose0" class="btn btn-neon btn-neon--cyan joker-choice-btn">0</button>
+        <button id="jokerChoose1" class="btn btn-neon btn-neon--purple joker-choice-btn">1</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
