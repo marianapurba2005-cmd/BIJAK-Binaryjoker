@@ -52,6 +52,9 @@
                 <span class="theme-toggle-knob"></span>
               </span>
             </button>
+            <button id="btnMute" class="btn-mute" type="button" title="Bisukan suara" aria-label="Bisukan suara" aria-pressed="false">
+              <span class="mute-icon">&#128266;</span>
+            </button>
             <button id="btnHome" class="btn btn-neon btn-neon--gold">HOME</button>
             <button id="btnStart" class="btn btn-neon btn-neon--cyan">START</button>
             <button id="btnRestart" class="btn btn-neon btn-neon--purple" disabled>RESTART</button>
@@ -151,21 +154,26 @@
   <!-- HOME SCREEN -->
   <div id="homeScreen" class="home-screen">
     <div class="home-box">
-      <button id="btnThemeHome" class="theme-toggle theme-toggle--home" type="button" title="Ganti tema terang/gelap" aria-label="Ganti tema terang/gelap" aria-pressed="false">
-        <span class="theme-toggle-track">
-          <span class="theme-toggle-bit theme-toggle-bit--0">0</span>
-          <span class="theme-toggle-bit theme-toggle-bit--1">1</span>
-          <span class="theme-toggle-knob"></span>
-        </span>
-      </button>
+      <div class="home-toggle-row">
+        <button id="btnThemeHome" class="theme-toggle theme-toggle--home" type="button" title="Ganti tema terang/gelap" aria-label="Ganti tema terang/gelap" aria-pressed="false">
+          <span class="theme-toggle-track">
+            <span class="theme-toggle-bit theme-toggle-bit--0">0</span>
+            <span class="theme-toggle-bit theme-toggle-bit--1">1</span>
+            <span class="theme-toggle-knob"></span>
+          </span>
+        </button>
+        <button id="btnMuteHome" class="btn-mute" type="button" title="Bisukan suara" aria-label="Bisukan suara" aria-pressed="false">
+          <span class="mute-icon">&#128266;</span>
+        </button>
+      </div>
       <h1 class="home-title"><span class="bracket">&lt;</span><span class="brand-word">BIJAK</span><span class="bracket">/&gt;</span></h1>
       <p class="home-subtitle">BIJAK is Binary Joker<span class="blink-cursor">_</span></p>
       <p class="home-sub">Susun angka BINER dari ingatanmu setelah mengintip kartu kasino sekilas.</p>
       <div class="home-diff-label">Pilih Kesulitan</div>
       <div class="home-diff-selector" id="homeDiffSelector">
         <button type="button" class="btn btn-neon btn-neon--cyan diff-btn is-active" data-diff="easy">MUDAH<br><span class="diff-sub">1.5 dtk</span></button>
-        <button type="button" class="btn btn-neon btn-neon--purple diff-btn" data-diff="normal">NORMAL<br><span class="diff-sub">0.5 dtk</span></button>
-        <button type="button" class="btn btn-neon btn-neon--red diff-btn" data-diff="hard">SULIT<br><span class="diff-sub">0.3 dtk</span></button>
+        <button type="button" class="btn btn-neon btn-neon--purple diff-btn" data-diff="normal">NORMAL<br><span class="diff-sub">1 dtk</span></button>
+        <button type="button" class="btn btn-neon btn-neon--red diff-btn" data-diff="hard">SULIT<br><span class="diff-sub">0.7 dtk</span></button>
       </div>
       <button id="homeStartBtn" class="btn btn-neon btn-neon--cyan home-start-btn">MULAI BERMAIN</button>
       <div class="home-highscore">
