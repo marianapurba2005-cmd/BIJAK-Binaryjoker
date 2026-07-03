@@ -903,6 +903,39 @@ body {
   :root[data-theme="dark"] .theme-toggle-knob { transform: translateX(23px); }
 }
 
+/* ---------- MUTE TOGGLE ---------- */
+.btn-mute {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: 1.5px solid var(--c-gold-dim);
+  background: rgba(217,179,76,0.06);
+  color: var(--c-gold);
+  display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  transition: all 0.2s ease, transform 0.2s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+}
+.btn-mute:hover { border-color: var(--c-gold); box-shadow: 0 0 12px rgba(217,179,76,0.4); }
+.btn-mute .mute-icon { filter: none; transition: opacity 0.2s ease; }
+.btn-mute[aria-pressed="true"] {
+  border-color: var(--c-red);
+  color: var(--c-red);
+  background: rgba(255,61,94,0.08);
+}
+.btn-mute[aria-pressed="true"] .mute-icon { opacity: 0.75; }
+.home-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+.home-toggle-row .theme-toggle--home { margin: 0; }
+
 /* ---------- GOLD BUTTON (home) ---------- */
 .btn-neon--gold {
   border-color: var(--c-gold); color: var(--c-gold);
